@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,7 +26,8 @@ public class MainActivity extends AppCompatActivity
     private DrawingView mDrawingView;
     private String selectedDataType = "0";
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initializeUI();
@@ -76,34 +78,33 @@ public class MainActivity extends AppCompatActivity
 
 
 
-
-
-
     }
 
-    @Override public void onClick(View view) {
+    @Override
+    public void onClick(View view) {
         switch (view.getId()) {
             case R.id.save_button:
-                File dir = new File(Environment.getExternalStorageDirectory().toString() + "/dataset/" + selectedDataType);
-                try{
-                    if(dir.mkdir()) {
+                File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/dataset/" + selectedDataType + "/");
+                try {
+                    if (dir.mkdirs()) {
                         System.out.println("Folder created");
+                        Log.d("created", dir.getAbsolutePath());
                     } else {
                         System.out.println("Folder is not created");
                     }
-                }catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Long tsLong = System.currentTimeMillis()/1000;
+                Long tsLong = System.currentTimeMillis() / 1000;
                 String ts = tsLong.toString();
-                mDrawingView.saveImage(Environment.getExternalStorageDirectory().toString() + "/dataset/" + selectedDataType , "" + ts,
+                mDrawingView.saveImage(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/dataset/" + selectedDataType, "/" + ts,
                         Bitmap.CompressFormat.PNG, 100);
                 break;
             case R.id.pen_button:
 
-                mDrawingView.setBackgroundColor(ContextCompat.getColor(this,R.color.colorDrawingCanvas));
+                mDrawingView.setBackgroundColor(ContextCompat.getColor(this, R.color.colorDrawingCanvas));
                 mDrawingView.initializePen();
-                mDrawingView.setPenColor(ContextCompat.getColor(this,R.color.colorPen));
+                mDrawingView.setPenColor(ContextCompat.getColor(this, R.color.colorPen));
                 mDrawingView.setPenSize(50);
                 break;
             case R.id.eraser_button:
@@ -111,10 +112,10 @@ public class MainActivity extends AppCompatActivity
                 mDrawingView.setEraserSize(100);
                 break;
             case R.id.clear_button:
-                mDrawingView.setBackgroundColor(ContextCompat.getColor(this,R.color.colorPen));
-                mDrawingView.setBackgroundColor(ContextCompat.getColor(this,R.color.colorDrawingCanvas));
+                mDrawingView.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPen));
+                mDrawingView.setBackgroundColor(ContextCompat.getColor(this, R.color.colorDrawingCanvas));
                 mDrawingView.initializePen();
-                mDrawingView.setPenColor(ContextCompat.getColor(this,R.color.colorPen));
+                mDrawingView.setPenColor(ContextCompat.getColor(this, R.color.colorPen));
                 mDrawingView.setPenSize(50);
                 break;
         }
@@ -123,26 +124,26 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         String item = adapterView.getItemAtPosition(i).toString();
-        switch (item){
-            case("+"):
+        switch (item) {
+            case ("+"):
                 selectedDataType = "plus";
                 break;
-            case("-"):
+            case ("-"):
                 selectedDataType = "minus";
                 break;
-            case("/"):
+            case ("/"):
                 selectedDataType = "slash";
                 break;
-            case("*"):
+            case ("*"):
                 selectedDataType = "times";
                 break;
-            case("("):
+            case ("("):
                 selectedDataType = "openingParanthesis";
                 break;
-            case(")"):
+            case (")"):
                 selectedDataType = "closingParanthesis";
                 break;
-            case("="):
+            case ("="):
                 selectedDataType = "equals";
             default:
                 selectedDataType = item;
