@@ -27,6 +27,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.2.0'
     compile 'com.github.mukeshsolanki:DrawingView-Android:1.0.2'
     compile 'com.pavelsikun:vintage-chroma:1.5'
-
+    compile 'net.objecthunter:exp4j:0.4.4'
     testCompile 'junit:junit:4.12'
 }
