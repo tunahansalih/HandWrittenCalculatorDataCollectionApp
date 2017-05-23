@@ -28,5 +28,6 @@ dependencies {
     compile 'com.github.mukeshsolanki:DrawingView-Android:1.0.2'
     compile 'com.pavelsikun:vintage-chroma:1.5'
     compile 'net.objecthunter:exp4j:0.4.4'
+    compile 'com.squareup.okhttp3:okhttp:3.8.0'
     testCompile 'junit:junit:4.12'
 }
