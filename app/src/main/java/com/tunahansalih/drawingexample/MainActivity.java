@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity
     private String selectedDataType = "0";
     String addText = "5";
     String cText;
+    int penSize = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity
                 mDrawingView.setBackgroundColor(ContextCompat.getColor(this, R.color.colorDrawingCanvas));
                 mDrawingView.initializePen();
                 mDrawingView.setPenColor(ContextCompat.getColor(this, R.color.colorPen));
-                mDrawingView.setPenSize(20);
+                mDrawingView.setPenSize(penSize);
                 break;
             case R.id.set_number:
 
@@ -121,26 +122,26 @@ public class MainActivity extends AppCompatActivity
 
                 new postRequest().execute(encodedImage);
 
-                // TODO set addText to serverResponseMessage
-
                 mDrawingView.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPen));
                 mDrawingView.setBackgroundColor(ContextCompat.getColor(this, R.color.colorDrawingCanvas));
                 mDrawingView.initializePen();
                 mDrawingView.setPenColor(ContextCompat.getColor(this, R.color.colorPen));
-                mDrawingView.setPenSize(20);
+                mDrawingView.setPenSize(penSize);
                 break;
             case R.id.clear_button:
                 mDrawingView.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPen));
                 mDrawingView.setBackgroundColor(ContextCompat.getColor(this, R.color.colorDrawingCanvas));
                 mDrawingView.initializePen();
                 mDrawingView.setPenColor(ContextCompat.getColor(this, R.color.colorPen));
-                mDrawingView.setPenSize(20);
+                mDrawingView.setPenSize(penSize);
+                cText = String.valueOf(mCalculator.getText());
+                if(isSet == false && cText.length()>0 && !cText.contains("Calculator")){
+                    mCalculator.setText(cText.substring(0,cText.length()-1));
+                }
                 break;
             case R.id.equals:
                 cText = String.valueOf(mCalculator.getText());
-                // TODO change myResult to cText value
 
-                String myResult = "35+(5*2+1)";
                 double result = 0;
                 Expression expression = new ExpressionBuilder(cText).build();
                 try {
@@ -149,12 +150,14 @@ public class MainActivity extends AppCompatActivity
                 } catch (ArithmeticException ex) {
                     // Display an error message
                     Log.i("message","Some error happened");
+                } catch (IllegalArgumentException e){
+                    Log.i("message","illegal argument");
                 }
 
 
                 isSet = true;
-                Log.i("result",String.valueOf((int)result));
-                mCalculator.setText(String.valueOf((int)result));
+                Log.i("result",String.valueOf(result));
+                mCalculator.setText(String.valueOf(String.format("%.2f", result)));
                 break;
         }
     }
@@ -176,7 +179,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected String doInBackground(String... params) {
 
-            String myUrl = "http://178.62.243.149:8000/polls/postData";
+            String myUrl = "http://188.226.158.26:8000/polls/postData";
             HashMap<String, String> hashMap = new HashMap<>();
             hashMap.put("image", params[0]);
             JSONObject json = new JSONObject(hashMap);
@@ -204,6 +207,10 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(String number) {
+            if(number.contentEquals("div"))
+                number = "/";
+            if(number.contentEquals("times"))
+                number = "*";
             if(cText.compareTo("0")==0){
                 mCalculator.setText(number);
             } else {
